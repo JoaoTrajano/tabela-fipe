@@ -1,11 +1,10 @@
-import api from '..'
+import { Api } from "..";
 
-export const getAllBrands = async(): Promise<any> => {
+export const getAllBrands = async (): Promise<any> => {
   try {
-    const { data } = await api.get('/carros/marcas')
+    const data = await Api({ path: "/carros/marcas", method: "GET" });
     return data;
-
   } catch (error) {
-    console.log(error)
+    throw new Error("Não foi possível listar as marcas!");
   }
-}
+};
