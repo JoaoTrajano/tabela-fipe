@@ -1,18 +1,18 @@
 import { Api } from "..";
 
-export type Modelo = {
+export type Model = {
   codigo: number;
   nome: string;
 };
 
-export type Ano = {
+export type Year = {
   codigo: number;
   nome: string;
 };
 
 export type Response = {
-  modelos: Modelo[];
-  anos: Ano[];
+  modelos: Model[];
+  anos: Year[];
 };
 
 export const getAllModelsByCode = async (code: number): Promise<Response> => {

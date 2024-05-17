@@ -10,23 +10,23 @@ import Select from "@/components/Select";
 import ButtonComponent from "@/components/Button";
 import { toast } from "react-toastify";
 
-import { getAllBrands } from "@/services/brands";
-import { getAllModelsByCode } from "@/services/modelsCar";
+import { Brand, getAllBrands } from "@/services/brands";
+import { Model, Year, getAllModelsByCode } from "@/services/modelsCar";
 import { DatasContext } from "@/contexts";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [brands, setBrands] = useState<any[]>([{}]);
+  const [brands, setBrands] = useState<Brand[]>([{ codigo: 0, nome: "" }]);
   const [codeBrand, setCodeBrand] = useState<number>(0);
 
-  const [models, setModels] = useState<any[]>([{}]);
+  const [models, setModels] = useState<Model[]>([{ codigo: 0, nome: "" }]);
   const [codeModel, setCodeModel] = useState<number>(0);
 
-  const [year, setYear] = useState<any[]>([{}]);
+  const [year, setYear] = useState<Year[]>([{ codigo: 0, nome: "" }]);
   const [codeYear, setCodeYear] = useState<string>("");
 
-  const [enabled] = useState<boolean>(true);
+  const enabled = true;
 
   const { setData } = useContext(DatasContext);
   const router = useRouter();
@@ -36,9 +36,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (codeBrand > 0) {
-      void fetchAllModelsByCode(codeBrand);
-    }
+    if (codeBrand > 0) void fetchAllModelsByCode(codeBrand);
   }, [codeBrand]);
 
   const fetchAllBrands = async () => {
@@ -83,21 +81,21 @@ export default function Home() {
               }}
             >
               <Stack>
-                {/* <Select
+                <Select
                   label="Marca"
                   list={brands}
                   handleChange={setCodeBrand}
-                /> */}
+                />
               </Stack>
               <Stack>
-                {/* <Select
+                <Select
                   label="Modelo"
                   list={models}
                   handleChange={setCodeModel}
-                /> */}
+                />
               </Stack>
               <Stack>
-                {/* <Select label="Ano" list={year} handleChange={setCodeYear} /> */}
+                <Select label="Ano" list={year} handleChange={setCodeYear} />
               </Stack>
               <ButtonComponent
                 disable={codeBrand > 0 ? !enabled : enabled}

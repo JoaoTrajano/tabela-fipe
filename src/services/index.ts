@@ -8,8 +8,15 @@ type ApiProps = {
 };
 
 export const Api = async ({ path, method }: ApiProps): Promise<any> => {
+  let pathValid = "";
+  const segments = path.split("/");
+
+  if (segments[0] === "") segments.shift();
+
+  pathValid = segments.join("/");
+
   try {
-    const res = await fetch(`${API.BASE_URL}/${path}`, {
+    const res = await fetch(`${API.BASE_URL}/${pathValid}`, {
       method,
     });
 
