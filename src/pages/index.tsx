@@ -31,6 +31,16 @@ export default function Home() {
   const { setData } = useContext(DatasContext);
   const router = useRouter();
 
+  useEffect(() => {
+    void fetchAllBrands();
+  }, []);
+
+  useEffect(() => {
+    if (codeBrand > 0) {
+      void fetchAllModelsByCode(codeBrand);
+    }
+  }, [codeBrand]);
+
   const fetchAllBrands = async () => {
     const data = await getAllBrands();
     setBrands(data);
@@ -41,16 +51,6 @@ export default function Home() {
     setModels(data.modelos);
     setYear(data.anos);
   };
-
-  useEffect(() => {
-    void fetchAllBrands();
-  }, []);
-
-  useEffect(() => {
-    if (codeBrand > 0) {
-      void fetchAllModelsByCode(codeBrand);
-    }
-  }, [codeBrand]);
 
   return (
     <>
