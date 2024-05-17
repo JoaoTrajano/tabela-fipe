@@ -1,12 +1,22 @@
-import { createContext, useState } from 'react';
+import { createContext, useState } from "react";
+
+type DatasContextTypeData = {
+  codeBrand: number;
+  codeModel: number;
+  codeYear: string;
+};
 
 interface DatasContextType {
-  data: any;
-  setData: (data: any) => void;
+  data: DatasContextTypeData;
+  setData: (data: DatasContextTypeData) => void;
 }
 
 const defaultValue: DatasContextType = {
-  data: {},
+  data: {
+    codeBrand: 0,
+    codeModel: 0,
+    codeYear: "",
+  },
   setData: (e: any) => {},
 };
 

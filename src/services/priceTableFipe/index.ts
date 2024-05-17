@@ -4,7 +4,7 @@ export const getPriceTableFipe = async (data: any): Promise<any> => {
   const { codeBrand, codeModel, codeYear } = data;
 
   try {
-    const { data } = await Api({
+    const data = await Api({
       path: `carros/marcas/${codeBrand}/modelos/${codeModel}/anos/${codeYear}`,
       method: "GET",
     });

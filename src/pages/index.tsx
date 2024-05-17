@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
@@ -13,18 +13,32 @@ import { toast } from "react-toastify";
 import { Brand, getAllBrands } from "@/services/brands";
 import { Model, Year, getAllModelsByCode } from "@/services/modelsCar";
 import { DatasContext } from "@/contexts";
+import { useForm } from "@/hooks";
 
 const inter = Inter({ subsets: ["latin"] });
 
+type InitalState = {
+  brands: Brand[];
+  models: Model[];
+  years: Year[];
+  codeBrand: number;
+  codeModel: number;
+  codeYear: string;
+};
+
+const initialState: InitalState = {
+  brands: [],
+  models: [],
+  years: [],
+  codeBrand: 0,
+  codeModel: 0,
+  codeYear: "",
+};
+
 export default function Home() {
-  const [brands, setBrands] = useState<Brand[]>([{ codigo: 0, nome: "" }]);
-  const [codeBrand, setCodeBrand] = useState<number>(0);
-
-  const [models, setModels] = useState<Model[]>([{ codigo: 0, nome: "" }]);
-  const [codeModel, setCodeModel] = useState<number>(0);
-
-  const [year, setYear] = useState<Year[]>([{ codigo: 0, nome: "" }]);
-  const [codeYear, setCodeYear] = useState<string>("");
+  const { setState, state } = useForm<InitalState>({
+    initialState,
+  });
 
   const enabled = true;
 
@@ -36,18 +50,18 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (codeBrand > 0) void fetchAllModelsByCode(codeBrand);
-  }, [codeBrand]);
+    const fetchAllModelsByCode = async (code: number) => {
+      const data = await getAllModelsByCode(code);
+      setState("models", data.modelos);
+      setState("years", data.anos);
+    };
+
+    if (state.codeBrand > 0) void fetchAllModelsByCode(state.codeBrand);
+  }, [state.codeBrand]);
 
   const fetchAllBrands = async () => {
     const data = await getAllBrands();
-    setBrands(data);
-  };
-
-  const fetchAllModelsByCode = async (code: number) => {
-    const data = await getAllModelsByCode(code);
-    setModels(data.modelos);
-    setYear(data.anos);
+    setState("brands", data);
   };
 
   return (
@@ -83,32 +97,35 @@ export default function Home() {
               <Stack>
                 <Select
                   label="Marca"
-                  list={brands}
-                  handleChange={setCodeBrand}
+                  list={state.brands}
+                  field="codeBrand"
+                  handleChange={setState}
                 />
               </Stack>
               <Stack>
                 <Select
                   label="Modelo"
-                  list={models}
-                  handleChange={setCodeModel}
+                  field="codeModel"
+                  list={state.models}
+                  handleChange={setState}
                 />
               </Stack>
               <Stack>
-                <Select label="Ano" list={year} handleChange={setCodeYear} />
+                <Select
+                  label="Ano"
+                  list={state.years}
+                  field="codeYear"
+                  handleChange={setState}
+                />
               </Stack>
               <ButtonComponent
-                disable={codeBrand > 0 ? !enabled : enabled}
+                disable={state.codeBrand > 0 ? !enabled : enabled}
                 handleClick={() => {
-                  if (!codeBrand || !codeModel || !codeYear) {
+                  if (!state.codeBrand || !state.codeModel || !state.codeYear) {
                     toast.error("Preencha todos os campos");
                     return;
                   }
-                  setData({
-                    codeBrand,
-                    codeModel,
-                    codeYear,
-                  });
+                  setData({ ...state });
                   router.push("price-car-table-fipe");
                 }}
               >
